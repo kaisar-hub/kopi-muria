@@ -19,4 +19,17 @@ window.VARIAN = [
   { id: "1kg",   label: "1kg",   pengali: 1 }
 ];
 
-window.TOKO = { nama: "Kopi Muria by Lunar Trail", whatsapp: "", lat: null, lng: null };
+window.TOKO = {
+  nama: "Kopi Muria by Lunar Trail",
+  whatsapp: "6282323652121",
+  lat: -6.813434,
+  lng: 110.929535
+};
+
+// Ongkir berdasarkan jarak (km)
+window.ONGKIR = [
+  { max: 3,  biaya: 0,     label: "Gratis" },
+  { max: 5,  biaya: 5000,  label: "Rp5.000" },
+  { max: 10, biaya: 10000, label: "Rp10.000" },
+  { max: Infinity, biaya: -1, label: "Kirim via ekspedisi" }
+];

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kopi Muria by Lunar Trail</title>
 <style>
-  :root { --bg: #1a1207; --surface: #2a1f10; --accent: #c8956c; --text: #f0e6d6; --muted: #a89279; }
+  :root { --bg: #1a1207; --surface: #2a1f10; --accent: #c8956c; --text: #f0e6d6; --muted: #a89279; --danger: #e74c3c; --success: #27ae60; }
   * { box-sizing: border-box; margin: 0; }
   body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100dvh; }
 
@@ -30,30 +30,69 @@
   .chip:hover { border-color: var(--accent); }
   .chip.aktif { background: var(--accent); color: var(--bg); border-color: var(--accent); font-weight: 600; }
 
-  #ringkasan { background: var(--surface); border-radius: 12px; padding: 16px; margin-top: 20px; display: none; }
-  #ringkasan h2 { font-size: 1rem; margin-bottom: 10px; }
+  .box { background: var(--surface); border-radius: 12px; padding: 16px; margin-top: 14px; }
+  .box h2 { font-size: 1rem; margin-bottom: 10px; }
+
+  #ringkasan { display: none; margin-top: 20px; }
   .total { font-size: 1.3rem; font-weight: 700; color: var(--accent); margin: 10px 0; }
 
-  #keranjang { background: var(--surface); border-radius: 12px; padding: 16px; margin-top: 14px; }
-  #keranjang h2 { font-size: 1rem; margin-bottom: 10px; }
   .kosong { color: var(--muted); text-align: center; padding: 12px; }
-  .baris-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #333; }
+  .baris-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #333; font-size: 0.9rem; }
   .baris-item:last-child { border: none; }
-  .baris-item .hapus { color: #e74c3c; cursor: pointer; font-size: 0.85rem; }
+  .baris-item .hapus { color: var(--danger); cursor: pointer; font-size: 0.85rem; }
   .keranjang-total { font-size: 1.1rem; font-weight: 700; color: var(--accent); margin-top: 10px; }
 
   input { width: 100%; padding: 10px; margin: 4px 0 8px; border: 1px solid #444; border-radius: 8px; background: var(--bg); color: var(--text); font-size: 0.9rem; }
   input::placeholder { color: var(--muted); }
+  label { font-size: 0.85rem; color: var(--muted); }
 
   .btn { display: block; width: 100%; background: var(--accent); color: var(--bg); border: 0; border-radius: 10px; padding: 12px; font-size: 1rem; font-weight: 600; cursor: pointer; margin-top: 8px; transition: opacity .2s; }
   .btn:disabled { opacity: 0.4; cursor: default; }
   .btn-tambah { background: transparent; border: 1.5px solid var(--accent); color: var(--accent); margin-top: 12px; }
   .btn-tambah:hover { background: rgba(200,149,108,0.15); }
+  .btn-outline { background: transparent; border: 1.5px solid var(--accent); color: var(--accent); }
+  .btn-outline:hover { background: rgba(200,149,108,0.15); }
+  .btn-success { background: var(--success); }
+  .btn-back { background: transparent; border: 1.5px solid #666; color: var(--muted); font-size: 0.85rem; margin-top: 6px; }
 
   .qty-control { display: flex; align-items: center; gap: 10px; margin-top: 10px; }
   .qty-btn { width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid var(--accent); background: transparent; color: var(--accent); font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
   .qty-btn:hover { background: rgba(200,149,108,0.15); }
   .qty-val { font-size: 1.1rem; font-weight: 600; min-width: 24px; text-align: center; }
+
+  /* Page management */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* Payment page */
+  .metode-card { background: var(--surface); border: 2px solid transparent; border-radius: 12px; padding: 14px; cursor: pointer; margin-bottom: 8px; transition: border-color .2s; }
+  .metode-card:hover { border-color: #555; }
+  .metode-card.aktif { border-color: var(--accent); }
+  .metode-card .judul { font-weight: 600; }
+  .metode-card .sub { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+
+  .lokasi-info { background: rgba(200,149,108,0.1); border: 1px solid var(--accent); border-radius: 10px; padding: 12px; margin: 10px 0; font-size: 0.85rem; }
+  .lokasi-info .jarak { font-weight: 700; color: var(--accent); }
+
+  .ongkir-badge { display: inline-block; background: var(--accent); color: var(--bg); padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 0.85rem; }
+  .ongkir-badge.gratis { background: var(--success); color: #fff; }
+  .ongkir-badge.ekspedisi { background: var(--danger); color: #fff; }
+
+  .qris-box { text-align: center; margin: 16px 0; }
+  .qris-box img { max-width: 260px; width: 100%; border-radius: 10px; border: 2px solid var(--accent); }
+  .qris-box p { font-size: 0.8rem; color: var(--muted); margin-top: 6px; }
+
+  .rincian { font-size: 0.85rem; }
+  .rincian .row { display: flex; justify-content: space-between; padding: 4px 0; }
+  .rincian .row.total-row { font-weight: 700; font-size: 1rem; color: var(--accent); border-top: 1px solid #444; margin-top: 6px; padding-top: 8px; }
+
+  .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid var(--muted); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; vertical-align: middle; margin-right: 6px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .sukses-box { text-align: center; padding: 24px 16px; }
+  .sukses-box .icon { font-size: 3rem; margin-bottom: 12px; }
+  .sukses-box h2 { color: var(--success); margin-bottom: 8px; }
+  .sukses-box p { color: var(--muted); font-size: 0.9rem; }
 </style>
 </head>
 <body>
@@ -62,36 +101,88 @@
   <p>by Lunar Trail</p>
 </header>
 <main>
-  <div class="section-label">Pilih Kopi</div>
-  <div class="cards" id="daftar-kopi"></div>
+  <!-- ═══ PAGE 1: KATALOG ═══ -->
+  <div class="page active" id="page-katalog">
+    <div class="section-label">Pilih Kopi</div>
+    <div class="cards" id="daftar-kopi"></div>
 
-  <div class="section-label">Jenis Gilingan</div>
-  <div class="chips" id="daftar-jenis"></div>
+    <div class="section-label">Jenis Gilingan</div>
+    <div class="chips" id="daftar-jenis"></div>
 
-  <div class="section-label">Varian Berat</div>
-  <div class="chips" id="daftar-varian"></div>
+    <div class="section-label">Varian Berat</div>
+    <div class="chips" id="daftar-varian"></div>
 
-  <div id="ringkasan">
-    <h2>Ringkasan</h2>
-    <div id="detail-ringkasan"></div>
-    <div class="total" id="harga-satuan"></div>
-    <div class="qty-control">
-      <button class="qty-btn" id="qty-minus">−</button>
-      <span class="qty-val" id="qty-val">1</span>
-      <button class="qty-btn" id="qty-plus">+</button>
+    <div class="box" id="ringkasan">
+      <h2>Ringkasan</h2>
+      <div id="detail-ringkasan"></div>
+      <div class="total" id="harga-satuan"></div>
+      <div class="qty-control">
+        <button class="qty-btn" id="qty-minus">−</button>
+        <span class="qty-val" id="qty-val">1</span>
+        <button class="qty-btn" id="qty-plus">+</button>
+      </div>
+      <button class="btn btn-tambah" id="btn-tambah">+ Tambah ke Keranjang</button>
     </div>
-    <button class="btn btn-tambah" id="btn-tambah">+ Tambah ke Keranjang</button>
+
+    <div class="box" id="keranjang">
+      <h2>🛒 Keranjang</h2>
+      <div id="isi-keranjang"><div class="kosong">Belum ada pesanan</div></div>
+      <div class="keranjang-total">Total: <span id="grand-total">Rp0</span></div>
+      <label>Nama pemesan</label>
+      <input id="nama" placeholder="Nama kamu">
+      <label>Catatan (opsional)</label>
+      <input id="catatan" placeholder="contoh: minta extra seal">
+      <button class="btn" id="lanjut" disabled>Lanjut ke Pembayaran →</button>
+    </div>
   </div>
 
-  <div id="keranjang">
-    <h2>🛒 Keranjang</h2>
-    <div id="isi-keranjang"><div class="kosong">Belum ada pesanan</div></div>
-    <div class="keranjang-total">Total: <span id="grand-total">Rp0</span></div>
-    <label>Nama pemesan</label>
-    <input id="nama" placeholder="Nama kamu">
-    <label>Catatan (opsional)</label>
-    <input id="catatan" placeholder="contoh: minta extra seal">
-    <button class="btn" id="lanjut" disabled>Pesan via WhatsApp</button>
+  <!-- ═══ PAGE 2: PAYMENT ═══ -->
+  <div class="page" id="page-payment">
+    <div class="section-label">Metode Pengambilan</div>
+
+    <div class="metode-card" id="metode-antar" data-metode="antar">
+      <div class="judul">🛵 Pesan Antar / COD</div>
+      <div class="sub">Kami antar ke lokasi kamu</div>
+    </div>
+    <div class="metode-card" id="metode-ambil" data-metode="ambil">
+      <div class="judul">🏪 Ambil Sendiri</div>
+      <div class="sub">Ambil langsung di toko</div>
+    </div>
+
+    <!-- Bagian lokasi (muncul jika pilih antar) -->
+    <div id="bagian-lokasi" style="display:none">
+      <div class="section-label">Lokasi Kamu</div>
+      <button class="btn btn-outline" id="btn-lokasi">📍 Bagikan Lokasi</button>
+      <div id="lokasi-result" style="display:none"></div>
+    </div>
+
+    <!-- Rincian biaya -->
+    <div class="box" id="bagian-rincian" style="display:none">
+      <h2>Rincian Biaya</h2>
+      <div class="rincian" id="rincian-isi"></div>
+    </div>
+
+    <!-- QRIS -->
+    <div class="box" id="bagian-qris" style="display:none">
+      <h2>Pembayaran QRIS</h2>
+      <div class="qris-box">
+        <img src="qris.jpg" alt="QRIS Kopi Muria">
+        <p>Scan QR di atas untuk membayar</p>
+      </div>
+      <button class="btn btn-success" id="btn-sudah-bayar" disabled>✓ Saya Sudah Bayar</button>
+    </div>
+
+    <button class="btn btn-back" id="btn-kembali">← Kembali ke Keranjang</button>
+  </div>
+
+  <!-- ═══ PAGE 3: SUKSES ═══ -->
+  <div class="page" id="page-sukses">
+    <div class="sukses-box">
+      <div class="icon">✅</div>
+      <h2>Pesanan Terkirim!</h2>
+      <p>Pesanan kamu sudah dikirim ke WhatsApp kami. Kami akan segera menyiapkan pesananmu.</p>
+      <button class="btn" id="btn-pesan-lagi" style="margin-top:20px">Pesan Lagi</button>
+    </div>
   </div>
 </main>
 <script src="menu.js"></script>
